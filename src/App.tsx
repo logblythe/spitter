@@ -1,153 +1,180 @@
-import { useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import "./App.css";
 
+const updateArray = (
+  inputArray: number[],
+  setInputArray: React.Dispatch<React.SetStateAction<number[]>>
+) => {
+  const lastItem = inputArray[inputArray.length - 1];
+  const newItem = lastItem + 1;
+  setInputArray([...inputArray, newItem]);
+};
+
 function App() {
-  const [firstArray, setFirstArray] = useState<number[]>([0]);
+  const [inputValue, setInputValue] = useState("");
+  const [durationInMilliseconds, setDurationInMilliseconds] = useState(1000);
+
+  const [firstArray, setFirstArray] = useState<number[]>([1]);
   const [secondArray, setSecondArray] = useState<number[]>([101]);
   const [thirdArray, setThirdArray] = useState<number[]>([201]);
 
-  const updateFirstArray = useCallback(() => {
-    const lastItem = firstArray[firstArray.length - 1];
-    const newItem = lastItem + 1;
-    setFirstArray((firstArray) => [...firstArray, newItem]);
-  }, [firstArray]);
-
-  const updateSecondArray = useCallback(() => {
-    const lastItem = secondArray[secondArray.length - 1];
-    const newItem = lastItem + 1;
-    setSecondArray((secondArray) => [...secondArray, newItem]);
-  }, [secondArray]);
-
-  const updateThirdArray = useCallback(() => {
-    const lastItem = thirdArray[thirdArray.length - 1];
-    const newItem = lastItem + 1;
-    setThirdArray((thirdArray) => [...thirdArray, newItem]);
-  }, [thirdArray]);
-
   useEffect(() => {
-    setTimeout(() => {
+    const timeoutId = setInterval(() => {
       if (firstArray[firstArray.length - 1] < 100) {
-        updateFirstArray();
+        updateArray(firstArray, setFirstArray);
       }
-    }, 500);
-  }, [firstArray, updateFirstArray]);
-
-  useEffect(() => {
-    setTimeout(() => {
       if (secondArray[secondArray.length - 1] < 200) {
-        updateSecondArray();
+        updateArray(secondArray, setSecondArray);
       }
-    }, 500);
-  }, [secondArray, updateSecondArray]);
-
-  useEffect(() => {
-    setTimeout(() => {
       if (thirdArray[thirdArray.length - 1] < 300) {
-        updateThirdArray();
+        updateArray(thirdArray, setThirdArray);
       }
-    }, 500);
-  }, [thirdArray, updateThirdArray]);
+    }, durationInMilliseconds);
+    return () => {
+      clearInterval(timeoutId);
+    };
+  }, [durationInMilliseconds, firstArray, secondArray, thirdArray]);
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setInputValue(input);
+  };
+
+  const handleSave = () => {
+    setDurationInMilliseconds(Number(inputValue));
+    setFirstArray([1]);
+    setSecondArray([101]);
+    setThirdArray([201]);
+  };
 
   return (
-    <>
-      <div>
-        <p
-          style={{
-            fontWeight: "bold",
-            fontSize: "24px",
-          }}
-        >
-          VERTICAL LIST
-        </p>
-        <ul
-          style={{
-            listStyleType: "none",
-          }}
-        >
-          {firstArray.map((item) => {
-            return (
-              <li
-                key={item}
-                style={{
-                  padding: 8,
-                  margin: 8,
-                  background: "gray",
-                  borderRadius: 16,
-                }}
-              >
-                {item}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-
-      <p
-        style={{
-          fontWeight: "bold",
-          fontSize: "24px",
-        }}
-      >
-        HORIZONTAL LIST
-      </p>
+    <div>
+      {/**Input and Button Section */}
       <div
         style={{
           display: "flex",
           flexDirection: "row",
-          listStyleType: "none",
-          width: 800,
-          overflow: "auto",
-          paddingBottom: "12px",
+          position: "sticky",
+          top: 4,
         }}
       >
-        {secondArray.map((item) => {
-          return (
-            <li
-              style={{
-                padding: "24px",
-                background: "gray",
-                margin: 2,
-                borderRadius: 16,
-                width: "80px",
-                flexShrink: 0,
-              }}
-              key={item}
-            >
-              {item}
-            </li>
-          );
-        })}
+        <input
+          onChange={handleInputChange}
+          value={inputValue}
+          placeholder="milliseconds"
+          type="number"
+        />
+        <button onClick={handleSave}>Save</button>
       </div>
-      <p
-        style={{
-          fontWeight: "bold",
-          fontSize: "24px",
-        }}
-      >
-        VERTICAL LIST
-      </p>
-      <ul
-        style={{
-          listStyleType: "none",
-        }}
-      >
-        {thirdArray.map((item) => {
-          return (
-            <li
-              key={item}
-              style={{
-                padding: 8,
-                background: "gray",
-                margin: 2,
-                borderRadius: 16,
-              }}
-            >
-              {item}
-            </li>
-          );
-        })}
-      </ul>
-    </>
+      {/**Input and Button Section */}
+
+      {/**List Section */}
+      <div>
+        <div>
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: "24px",
+            }}
+          >
+            VERTICAL LIST
+          </p>
+          <ul
+            style={{
+              listStyleType: "none",
+            }}
+          >
+            {firstArray.map((item) => {
+              return (
+                <li
+                  key={item}
+                  style={{
+                    padding: 8,
+                    margin: 8,
+                    background: "gray",
+                    borderRadius: 16,
+                  }}
+                >
+                  {item}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        <div>
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: "24px",
+            }}
+          >
+            HORIZONTAL LIST
+          </p>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              listStyleType: "none",
+              width: 800,
+              overflow: "auto",
+              paddingBottom: "12px",
+            }}
+          >
+            {secondArray.map((item) => {
+              return (
+                <li
+                  style={{
+                    padding: "24px",
+                    background: "gray",
+                    margin: 2,
+                    borderRadius: 16,
+                    width: "80px",
+                    flexShrink: 0,
+                  }}
+                  key={item}
+                >
+                  {item}
+                </li>
+              );
+            })}
+          </div>
+        </div>
+
+        <div>
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: "24px",
+            }}
+          >
+            VERTICAL LIST
+          </p>
+          <ul
+            style={{
+              listStyleType: "none",
+            }}
+          >
+            {thirdArray.map((item) => {
+              return (
+                <li
+                  key={item}
+                  style={{
+                    padding: 8,
+                    margin: 8,
+                    background: "gray",
+                    borderRadius: 16,
+                  }}
+                >
+                  {item}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+      {/**List Section */}
+    </div>
   );
 }
 
