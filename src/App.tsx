@@ -29,7 +29,7 @@ function App() {
       if (firstArray[firstArray.length - 1] < 100) {
         updateFirstArray();
       }
-    }, 100);
+    }, 500);
   }, [firstArray, updateFirstArray]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function App() {
       if (secondArray[secondArray.length - 1] < 200) {
         updateSecondArray();
       }
-    }, 100);
+    }, 500);
   }, [secondArray, updateSecondArray]);
 
   useEffect(() => {
@@ -45,54 +45,106 @@ function App() {
       if (thirdArray[thirdArray.length - 1] < 300) {
         updateThirdArray();
       }
-    }, 100);
+    }, 500);
   }, [thirdArray, updateThirdArray]);
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "red",
-        }}
-      >
-        first vertical
-        <ul>
+      <div>
+        <p
+          style={{
+            fontWeight: "bold",
+            fontSize: "24px",
+          }}
+        >
+          VERTICAL LIST
+        </p>
+        <ul
+          style={{
+            listStyleType: "none",
+          }}
+        >
           {firstArray.map((item) => {
-            return <li key={item}>{item}</li>;
+            return (
+              <li
+                key={item}
+                style={{
+                  padding: 8,
+                  margin: 8,
+                  background: "gray",
+                  borderRadius: 16,
+                }}
+              >
+                {item}
+              </li>
+            );
           })}
         </ul>
       </div>
 
+      <p
+        style={{
+          fontWeight: "bold",
+          fontSize: "24px",
+        }}
+      >
+        HORIZONTAL LIST
+      </p>
       <div
         style={{
           display: "flex",
           flexDirection: "row",
-          backgroundColor: "blue",
+          listStyleType: "none",
+          width: 800,
+          overflow: "auto",
+          paddingBottom: "12px",
         }}
       >
         {secondArray.map((item) => {
-          return <li key={item}>{item}</li>;
+          return (
+            <li
+              style={{
+                padding: "24px",
+                background: "gray",
+                margin: 2,
+                borderRadius: 16,
+                width: "80px",
+                flexShrink: 0,
+              }}
+              key={item}
+            >
+              {item}
+            </li>
+          );
         })}
       </div>
-      <div
+      <p
         style={{
-          display: "flex",
-          flexDirection: "column",
+          fontWeight: "bold",
+          fontSize: "24px",
         }}
       >
-        second vertical
-      </div>
+        VERTICAL LIST
+      </p>
       <ul
         style={{
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "green",
+          listStyleType: "none",
         }}
       >
         {thirdArray.map((item) => {
-          return <li key={item}>{item}</li>;
+          return (
+            <li
+              key={item}
+              style={{
+                padding: 8,
+                background: "gray",
+                margin: 2,
+                borderRadius: 16,
+              }}
+            >
+              {item}
+            </li>
+          );
         })}
       </ul>
     </>
